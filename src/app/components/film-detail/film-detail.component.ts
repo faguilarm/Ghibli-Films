@@ -1,4 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { ApiService } from 'src/app/api.service';
 
 @Component({
   selector: 'app-film-detail',
@@ -11,20 +13,22 @@ export class FilmDetailComponent implements OnInit {
 
   fields = [];
 
-  constructor() { }
+  constructor(private activatedRoute: ActivatedRoute, private apiService: ApiService) { }
 
   ngOnInit(): void {
-    this.initDetail();
+    this.activatedRoute.url.subscribe(this.loadDetail);
   }
 
-  initDetail() {
-    console.log("recibido", this.data);
-    let { id, url, ...data } = this.data;
-    let fields =
-      Object.entries(data)
+  loadDetail = (newUrl) => {
+    this.apiService.loadDetail(newUrl[0].path, newUrl[1].path)
+    .subscribe(this.initDetail);
+  }
+
+  initDetail = data => {
+    let { id, url, ...fields } = data;
+    this.fields =
+      Object.entries(fields)
       .map(([label, value]) => ({label: this.formatLabel(label), value}));
-    console.log(fields);
-    this.fields = fields;
   }
 
   formatLabel(label): string {

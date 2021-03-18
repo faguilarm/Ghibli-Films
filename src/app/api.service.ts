@@ -28,6 +28,10 @@ export class ApiService {
     return this.httpClient.get(`${this.API}${name}`);
   }
 
+  loadDetail(name: string, id: string): Observable<any> {
+    return this.httpClient.get(`${this.API}${name}/${id}`);
+  }
+
   getListFields(name: string) {
     return this.listFields[name];
   }

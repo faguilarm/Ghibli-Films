@@ -7,6 +7,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MainContainerComponent implements OnInit {
 
+  options = [ "films", "people", "locations", "species", "vehicles"];
+
   cards = [""];
   item = {
     "id": "2baf70d1-42bb-4437-b551-e5fed5a87abe",

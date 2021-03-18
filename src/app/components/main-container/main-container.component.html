@@ -3,8 +3,13 @@
   <h2 class="subtitle">
     People, places, and things found in the worlds of Ghibli
   </h2>
-  <div class="container is-widescreen has-background-primary">
-    <app-searchable-list (onSelect)="filmSelected($event)"></app-searchable-list>
-    <app-film-detail [data]="item"></app-film-detail>
+  <div class="container is-widescreen">
+    <div class="buttons">
+      <button class="button is-primary is-outlined" *ngFor="let option of options" [routerLink]="option">{{option}}</button>
+    </div>
+    
+    <router-outlet></router-outlet>
+    <!--app-searchable-list (onSelect)="filmSelected($event)"></app-searchable-list>
+    <app-film-detail [data]="item"></app-film-detail-->
   </div>
 </section>

@@ -1,5 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { ApiService } from 'src/app/api.service';
+import { ActivatedRoute } from "@angular/router";
 
 @Component({
   selector: 'app-searchable-list',
@@ -8,25 +9,33 @@ import { ApiService } from 'src/app/api.service';
 })
 export class SearchableListComponent implements OnInit {
 
-  @Output() onSelect = new EventEmitter<string>();
-
   searchTerm = "";
+  fields = [];
   data = [];
 
-  constructor(private apiService: ApiService) { }
+  constructor(private apiService: ApiService, private activatedRoute: ActivatedRoute) { }
 
   ngOnInit(): void {
-    this.apiService.loadFilms()
+    this.activatedRoute.url.subscribe(newUrl => {
+      console.log("url.subscribe", newUrl);
+      this.loadList(newUrl[0].path)
+    });
+  }
+
+  loadList(name) {
+    console.log("loadList", name);
+    this.data = [];
+    this.fields = this.apiService.getListFields(name);
+    console.log(this.fields);
+    this.apiService.loadCollection(name)
     .subscribe(response => {
-      this.data = response[0];
+      this.data = response;
     });
   }
 
   getOptions(): any[] {
-    return this.data.filter(({title}) => title.toLowerCase().includes(this.searchTerm.trim().toLowerCase()));
-  }
-
-  select({id}) {
-    this.onSelect.emit(id);
+    return this.data
+      .filter(item => item[this.fields[0]].toLowerCase().includes(this.searchTerm.trim().toLowerCase()))
+      .map(item => ({...item, dropdownLabel: item[this.fields[0]] }));
   }
 }

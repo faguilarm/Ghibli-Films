@@ -4,8 +4,14 @@
       <label class="label is-capitalized">{{field.label}}</label>
     </div>
     <div class="field-body">
-      <div class="field">
+      <div class="field" *ngIf="!field.related">
         {{field.value}}
+      </div>
+      <div class="field" *ngIf="field.related">
+        <div class="buttons are-small">
+          <button class="button is-primary is-outlined" *ngFor="let related of field.related"
+            [routerLink]="['/'+related.target, related.id]">{{related.label}}</button>
+        </div>
       </div>
     </div>
   </div>

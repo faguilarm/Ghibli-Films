@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ApiService } from 'src/app/api.service';
 import { ActivatedRoute } from "@angular/router";
 
@@ -16,19 +16,15 @@ export class SearchableListComponent implements OnInit {
   constructor(private apiService: ApiService, private activatedRoute: ActivatedRoute) { }
 
   ngOnInit(): void {
-    this.activatedRoute.url.subscribe(newUrl => {
-      console.log("url.subscribe", newUrl);
-      this.loadList(newUrl[0].path)
-    });
+    this.activatedRoute.url.subscribe(this.loadList);
   }
 
-  loadList(name) {
-    console.log("loadList", name);
+  loadList = newUrl => {
+    let name = newUrl[0].path;
     this.data = [];
     this.fields = this.apiService.getListFields(name);
-    console.log(this.fields);
-    this.apiService.loadCollection(name)
-    .subscribe(response => {
+    this.apiService.loadList(name)
+    .then(response => {
       this.data = response;
     });
   }

@@ -19,20 +19,20 @@ export class FilmDetailComponent implements OnInit {
     this.activatedRoute.url.subscribe(this.loadDetail);
   }
 
-  loadDetail = (newUrl) => {
+  loadDetail = newUrl => {
     this.apiService.loadDetail(newUrl[0].path, newUrl[1].path)
-    .subscribe(this.initDetail);
+    .then(this.initDetail);
   }
 
   initDetail = data => {
     let { id, url, ...fields } = data;
     this.fields =
       Object.entries(fields)
-      .map(([label, value]) => ({label: this.formatLabel(label), value}));
+      .map(([label, value]) => ({label: this.formatLabel(label), value, related: this.apiService.hasRawValue(value)? null : value}))
+      .filter(field => field.value);
   }
 
   formatLabel(label): string {
-    return label.replaceAll("_", " ");//.toUpperCase();
+    return label.replaceAll("_", " ");
   };
-
 }

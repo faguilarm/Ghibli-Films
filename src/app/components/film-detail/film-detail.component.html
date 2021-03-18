@@ -1,1 +1,12 @@
-<p>film-detail works!</p>
+<div>
+  <div class="field is-horizontal" *ngFor="let field of fields">
+    <div class="field-label is-capitalized">
+      <label class="label is-capitalized">{{field.label}}</label>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        {{field.value}}
+      </div>
+    </div>
+  </div>
+</div>

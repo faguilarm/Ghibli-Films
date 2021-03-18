@@ -4,7 +4,7 @@
     People, places, and things found in the worlds of Ghibli
   </h2>
   <div class="container is-widescreen has-background-primary">
-    <app-searchable-list></app-searchable-list>
-    <!--app-film-detail></app-film-detail-->
+    <app-searchable-list (onSelect)="filmSelected($event)"></app-searchable-list>
+    <app-film-detail [data]="item"></app-film-detail>
   </div>
 </section>

@@ -1,4 +1,22 @@
 <div>
+  <div class="dropdown" [ngClass]="{'is-active' : searchTerm.trim()}">
+    <div class="dropdown-trigger">
+      <div class="field">
+        <p class="control is-expanded ">
+            <input class="input" [(ngModel)]="searchTerm" type="search" placeholder="Search..."/>
+        </p>
+      </div>
+    </div>
+    <div class="dropdown-menu" id="dropdown-menu" role="menu">
+      <div class="dropdown-content">
+        <a *ngFor="let option of getOptions()" (click)="select(option)"
+          href="#"
+          class="dropdown-item">
+          {{option.title}}
+        </a>
+      </div>
+    </div>
+  </div>
   <table class="table">
     <thead>
       <tr>
@@ -8,7 +26,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let item of data; let i = index">
+      <tr *ngFor="let item of data; let i = index" (click)="select(item)">
         <th>{{i+1}}</th>
         <td>{{item.title}}</td>
         <td>{{item.release_date}}</td>

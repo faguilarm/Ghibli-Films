@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { ApiService } from 'src/app/api.service';
 
 @Component({
@@ -8,6 +8,9 @@ import { ApiService } from 'src/app/api.service';
 })
 export class SearchableListComponent implements OnInit {
 
+  @Output() onSelect = new EventEmitter<string>();
+
+  searchTerm = "";
   data = [];
 
   constructor(private apiService: ApiService) { }
@@ -19,4 +22,11 @@ export class SearchableListComponent implements OnInit {
     });
   }
 
+  getOptions(): any[] {
+    return this.data.filter(({title}) => title.toLowerCase().includes(this.searchTerm.trim().toLowerCase()));
+  }
+
+  select({id}) {
+    this.onSelect.emit(id);
+  }
 }

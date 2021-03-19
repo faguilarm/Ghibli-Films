@@ -21,7 +21,7 @@ export class ApiService {
   private relatedLists = {
     films: { people: "people", species: "species", locations: "locations", vehicles: "vehicles" },
     people: { films: "films", species: "species", locations: "locations", vehicles: "vehicles" },
-    locations: ["name", "terrain"],
+    locations: { residents: "people", films: "films" },
     species: { people: "people", films: "films" },
     vehicles: { pilot: "people", films: "films" },
   };
@@ -54,8 +54,6 @@ export class ApiService {
     for(let field in this.relatedLists[name]) {
       if(this.hasRawValue(detail[field])) {
         detail[field] = await this.loadRelatedDetail(detail, name, field, this.relatedLists[name][field]);
-      } else {
-        
       }
     }
     return detail;
@@ -66,9 +64,9 @@ export class ApiService {
       await this.loadList(target);
     }
     if(typeof detail[field] === "string") {
-      this.loadRelatedDetailSingle(detail.id, name, detail[field], target)
+      return [this.loadRelatedDetailSingle(detail.id, name, detail[field], target)];
     } else if(Array.isArray(detail[field])) {
-      return detail[field].map(item => this.loadRelatedDetailSingle(detail.id, name, item, target));
+      return detail[field].map(item => this.loadRelatedDetailSingle(detail.id, name, item, target)).flat();
     } else {
       return detail[field];
     }
@@ -79,10 +77,28 @@ export class ApiService {
     let relatedObject;
     if(relatedId) {
       relatedObject = this.store[target][relatedId];
+      return { target, id: relatedObject.id, label: relatedObject.name || relatedObject.title };
     } else {
-      relatedObject = { id: 0, name: "n"};
+      let relatedObjects =
+        Object.values(this.store[target])
+        .filter( targetItem => {
+          if(this.hasRawValue(targetItem[name])) {
+            if(typeof targetItem[name] === "string" && this.getId(targetItem[name])) {
+              console.log("getId %s - %s", this.getId(targetItem[name]), id);
+              return this.getId(targetItem[name]) === id;
+            } else if(Array.isArray(targetItem[name])) {
+              let relatedIds = targetItem[name].map(relatedItem => this.getId(relatedItem));
+              console.log("relatedIds %O includes %s", relatedIds, id);
+              return relatedIds.includes(id);
+            }
+          } else {
+            console.log("(direct) related %O includes %s", targetItem[name], id);
+            return targetItem[name].includes(id);
+          }
+        });
+      console.log("relatedObjects", relatedObjects);
+      return relatedObjects.map(related => ({ target, id: related["id"], label: related["name"] || related["title"] }));
     }
-    return { target, id: relatedObject.id, label: relatedObject.name };
   }
 
   getListFields(name: string) {
@@ -94,7 +110,7 @@ export class ApiService {
     return (value === null || typeof value === "string") || (Array.isArray(value) && typeof value[0] === "string");
   }
 
-  //Get the ID included in the url if exists, this function must be improved by using regex or a similar approach
+  //Get the ID included in the url if exists; this function must be improved by using regex or a similar approach
   getId(url) {
     let urlParts = url.split("/");
     return urlParts.length === 5 && urlParts[4] !== ""? urlParts[4] : null;

@@ -84,21 +84,21 @@ export class ApiService {
         .filter( targetItem => {
           if(this.hasRawValue(targetItem[name])) {
             if(typeof targetItem[name] === "string" && this.getId(targetItem[name])) {
-              console.log("getId %s - %s", this.getId(targetItem[name]), id);
               return this.getId(targetItem[name]) === id;
             } else if(Array.isArray(targetItem[name])) {
               let relatedIds = targetItem[name].map(relatedItem => this.getId(relatedItem));
-              console.log("relatedIds %O includes %s", relatedIds, id);
               return relatedIds.includes(id);
             }
           } else {
-            console.log("(direct) related %O includes %s", targetItem[name], id);
             return targetItem[name].includes(id);
           }
         });
-      console.log("relatedObjects", relatedObjects);
       return relatedObjects.map(related => ({ target, id: related["id"], label: related["name"] || related["title"] }));
     }
+  }
+
+  getLists() {
+    return Object.keys(this.listFields);
   }
 
   getListFields(name: string) {

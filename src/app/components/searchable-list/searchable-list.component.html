@@ -7,17 +7,17 @@
         </p>
       </div>
     </div>
-    <div class="dropdown-menu" id="dropdown-menu" role="menu">
+    <div class="dropdown-menu is-overlay" role="menu">
       <div class="dropdown-content">
-        <a *ngFor="let option of getOptions()" (click)="select(option)" [routerLink]="option.id"
+        <a *ngFor="let option of getOptions()" [routerLink]="option.id"
           href="#"
           class="dropdown-item">
           {{option.dropdownLabel}}
-        </a>
+      </a>
       </div>
     </div>
   </div>
-  <table class="table">
+  <table class="table is-hoverable">
     <thead>
       <tr>
         <th><abbr title="Number">#</abbr></th>
@@ -25,7 +25,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let item of data; let i = index" [routerLink]="item.id">
+      <tr *ngFor="let item of data; let i = index" [routerLink]="[item.id]" class="is-clickable">
         <th>{{i+1}}</th>
         <td *ngFor="let field of fields">{{item[field]}}</td>
       </tr>

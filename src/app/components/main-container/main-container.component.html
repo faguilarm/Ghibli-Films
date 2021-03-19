@@ -1,15 +1,15 @@
 <section class="section is-medium">
-  <h1 class="title">Studio Ghibli API</h1>
-  <h2 class="subtitle">
+  <h1 class="title has-text-centered	">Studio Ghibli API</h1>
+  <h2 class="subtitle has-text-centered	">
     People, places, and things found in the worlds of Ghibli
   </h2>
   <div class="container is-widescreen">
-    <div class="buttons">
-      <button class="button is-primary is-outlined" *ngFor="let option of options" [routerLink]="option">{{option}}</button>
+    <div class="buttons is-justify-content-space-evenly">
+      <button class="button is-primary is-outlined"
+        *ngFor="let option of options" [routerLink]="option">{{option | titlecase}}</button>
     </div>
-    
-    <router-outlet></router-outlet>
-    <!--app-searchable-list (onSelect)="filmSelected($event)"></app-searchable-list>
-    <app-film-detail [data]="item"></app-film-detail-->
+    <div class="box is-flex is-justify-content-center">
+      <router-outlet></router-outlet>
+    </div>
   </div>
 </section>
